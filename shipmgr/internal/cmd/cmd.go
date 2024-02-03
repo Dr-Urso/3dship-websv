@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	_ "shipmgr/internal/logic"
+
 	"context"
+	"shipmgr/internal/controller/part"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
-
-	"shipmgr/internal/controller/hello"
 )
 
 var (
@@ -19,9 +20,10 @@ var (
 			s := g.Server()
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(ghttp.MiddlewareHandlerResponse)
-				group.Bind(
-					hello.NewV1(),
+				var (
+					shipMgr = part.NewV1()
 				)
+				group.Bind(shipMgr)
 			})
 			s.Run()
 			return nil
