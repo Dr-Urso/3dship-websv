@@ -7,6 +7,7 @@ type AddReq struct {
 	Name   string `v:"required"`
 	Single bool   `v:"required"`
 	Script string `v:"required"`
+	Mesh   int
 }
 
 type AddRes struct {

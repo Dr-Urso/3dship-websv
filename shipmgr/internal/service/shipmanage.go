@@ -7,12 +7,16 @@ package service
 
 import (
 	"context"
+	"shipmgr/api/part/V1"
 	"shipmgr/internal/model"
 )
 
 type (
 	IShipmanage interface {
 		AddPart(ctx context.Context, input model.PartInput) (err error)
+		AddGroup(ctx context.Context, input model.GroupInput) (err error)
+		UpdatePart(ctx context.Context, input V1.UpdateReq) (err error)
+		ExportUnity(ctx context.Context) (*[]model.PartOutput, error)
 	}
 )
 

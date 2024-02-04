@@ -20,6 +20,7 @@ type PartsDao struct {
 
 // PartsColumns defines and stores column names for table parts.
 type PartsColumns struct {
+	Mesh        string //
 	PartName    string //
 	StatusIndex string //
 	AnimScript  string //
@@ -29,6 +30,7 @@ type PartsColumns struct {
 
 // partsColumns holds the columns for table parts.
 var partsColumns = PartsColumns{
+	Mesh:        "mesh",
 	PartName:    "partName",
 	StatusIndex: "statusIndex",
 	AnimScript:  "animScript",

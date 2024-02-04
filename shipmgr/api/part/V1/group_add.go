@@ -9,5 +9,5 @@ type AddGroupReq struct {
 }
 
 type AddGroupRes struct {
-	Status int `dc:"Status code"`
+	Status bool `dc:"Status code"`
 }

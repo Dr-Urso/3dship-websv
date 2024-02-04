@@ -11,6 +11,7 @@ import (
 // Parts is the golang structure of table parts for DAO operations like Where/Data.
 type Parts struct {
 	g.Meta      `orm:"table:parts, do:true"`
+	Mesh        interface{} //
 	PartName    interface{} //
 	StatusIndex interface{} //
 	AnimScript  interface{} //

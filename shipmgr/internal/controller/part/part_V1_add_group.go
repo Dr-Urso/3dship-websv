@@ -2,13 +2,19 @@ package part
 
 import (
 	"context"
-
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
+	"shipmgr/internal/model"
+	"shipmgr/internal/service"
 
 	"shipmgr/api/part/V1"
 )
 
 func (c *ControllerV1) AddGroup(ctx context.Context, req *V1.AddGroupReq) (res *V1.AddGroupRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+	inp := model.GroupInput{
+		Name:      req.Name,
+		StartWith: req.StartWith,
+	}
+	err = service.Shipmanage().AddGroup(ctx, inp)
+	return &V1.AddGroupRes{
+		Status: err == nil,
+	}, err
 }
