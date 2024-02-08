@@ -26,6 +26,7 @@ var (
 				)
 				group.Bind(shipMgr)
 			})
+			s.SetServerRoot("/resource/public")
 			s.Run()
 			return nil
 		},
