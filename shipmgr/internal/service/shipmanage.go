@@ -17,6 +17,7 @@ type (
 		AddGroup(ctx context.Context, input model.GroupInput) (err error)
 		UpdatePart(ctx context.Context, input V1.UpdateReq) (err error)
 		ExportUnity(ctx context.Context) (*[]model.PartOutput, error)
+		ExportFiltered(ctx context.Context, input V1.FilterReq) (*V1.FilterRes, error)
 	}
 )
 

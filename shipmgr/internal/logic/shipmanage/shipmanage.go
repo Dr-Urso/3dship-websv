@@ -85,3 +85,26 @@ func (s *sShipmanage) ExportUnity(ctx context.Context) (*[]model.PartOutput, err
 	}
 	return &out, nil
 }
+
+func (s *sShipmanage) ExportFiltered(ctx context.Context, input V1.FilterReq) (*V1.FilterRes, error) {
+	var Md []Entity
+	err := dao.Parts.Ctx(ctx).OmitEmpty().Where(do.Parts{Mesh: input.Mesh}).WhereLike("partName", "%%"+input.Name+"%%").ScanList(&Md, "Part")
+	if err != nil {
+		return &V1.FilterRes{}, err
+	}
+	var out V1.FilterRes
+	for _, val := range Md {
+		if val.Part == nil {
+			continue // 跳过nil值
+		}
+		out.Data = append(out.Data, model.PartOutput{
+			Mesh:        val.Part.Mesh,
+			PartName:    val.Part.PartName,
+			StatusIndex: val.Part.StatusIndex,
+			AnimScript:  val.Part.AnimScript,
+			ExProp:      val.Part.ExProp,
+			IsSingle:    val.Part.IsSingle == 1,
+		})
+	}
+	return &out, nil
+}
