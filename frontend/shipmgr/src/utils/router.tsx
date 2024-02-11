@@ -1,9 +1,10 @@
-import {createBrowserRouter} from "react-router-dom";
+
 import App from "../App.tsx";
 import ImportGltf from "../components/importGltf.tsx";
 import PartOverview from "../components/partOverview.tsx";
+import {createHashRouter} from "react-router-dom";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/",
         element: <App></App>,
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
                 element: <ImportGltf></ImportGltf>,
             },
             {
-                path:"/chart",
+                path: "/chart",
                 element: <PartOverview></PartOverview>,
             },
         ]

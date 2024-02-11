@@ -3,6 +3,7 @@ package shipmanage
 import (
 	"context"
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"shipmgr/api/part/V1"
 	"shipmgr/internal/dao"
 	"shipmgr/internal/model"
@@ -31,6 +32,10 @@ func (s *sShipmanage) AddPart(ctx context.Context, input model.PartInput) (err e
 			IsSingle:    input.IsSingle,
 			Mesh:        input.Mesh,
 			StatusIndex: 0,
+			ExProp: model.ExtraProp{
+				Progress: 0,
+				Status:   "",
+			},
 		}).Insert()
 		return err
 	})
@@ -51,7 +56,24 @@ func (s *sShipmanage) AddGroup(ctx context.Context, input model.GroupInput) (err
 func (s *sShipmanage) UpdatePart(ctx context.Context, input V1.UpdateReq) (err error) {
 	m := dao.Parts.Ctx(ctx)
 	return m.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
-		_, err = dao.Parts.Ctx(ctx).Where(do.Parts{Mesh: input.Mesh}).Data(do.Parts{ExProp: input.ExProp}).Update()
+		ins := model.ExtraProp{
+			Progress: 0,
+			Status:   "",
+		}
+		res := do.Parts{}
+		dao.Parts.Ctx(ctx).Where(do.Parts{Mesh: input.Mesh}).Scan(&res)
+		propstr := res.ExProp
+		j, _ := gjson.LoadJson(propstr)
+		ins.Progress = j.Get("progress").Int()
+		ins.Status = j.Get("status").String()
+		if input.Progress != 0 {
+			ins.Progress = input.Progress
+		}
+		if input.Status != "" {
+			ins.Status = input.Status
+		}
+		js, _ := gjson.Encode(ins)
+		_, err = dao.Parts.Ctx(ctx).Where(do.Parts{Mesh: input.Mesh}).Data(do.Parts{ExProp: js}).Update()
 		_, err = dao.Parts.Ctx(ctx).Where(do.Parts{Mesh: input.Mesh}).Increment("statusIndex", 1)
 		return err
 	})
@@ -77,7 +99,7 @@ func (s *sShipmanage) ExportUnity(ctx context.Context) (*[]model.PartOutput, err
 		out = append(out, model.PartOutput{
 			Mesh:        val.Part.Mesh,
 			PartName:    val.Part.PartName,
-			StatusIndex: val.Part.StatusIndex,
+			StatusIndex: int(val.Part.StatusIndex),
 			AnimScript:  val.Part.AnimScript,
 			ExProp:      val.Part.ExProp,
 			IsSingle:    val.Part.IsSingle == 1,
@@ -100,7 +122,7 @@ func (s *sShipmanage) ExportFiltered(ctx context.Context, input V1.FilterReq) (*
 		out.Data = append(out.Data, model.PartOutput{
 			Mesh:        val.Part.Mesh,
 			PartName:    val.Part.PartName,
-			StatusIndex: val.Part.StatusIndex,
+			StatusIndex: int(val.Part.StatusIndex),
 			AnimScript:  val.Part.AnimScript,
 			ExProp:      val.Part.ExProp,
 			IsSingle:    val.Part.IsSingle == 1,

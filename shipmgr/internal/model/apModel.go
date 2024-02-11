@@ -25,3 +25,8 @@ type PartOutput struct {
 	IsSingle    bool   `json:"single"`
 	Mesh        int    `json:"mesh"`
 }
+
+type ExtraProp struct {
+	Progress int    `json:"progress"`
+	Status   string `json:"status"`
+}

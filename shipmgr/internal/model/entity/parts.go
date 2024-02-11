@@ -8,7 +8,7 @@ package entity
 type Parts struct {
 	Mesh        int    `json:"mesh"        ` //
 	PartName    string `json:"partName"    ` //
-	StatusIndex int    `json:"statusIndex" ` //
+	StatusIndex uint   `json:"statusIndex" ` //
 	AnimScript  string `json:"animScript"  ` //
 	ExProp      string `json:"exProp"      ` //
 	IsSingle    int    `json:"isSingle"    ` //
