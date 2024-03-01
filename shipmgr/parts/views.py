@@ -25,11 +25,18 @@ class ImportGltfView(APIView):
                 serializer.save()
         return Response(nodes)
 
-
+class GetPartPropView(APIView):
+    def get(self,request):
+        name = request.GET['name']
+        print(name)
+        node = models.ShipParts.objects.get(partName__contains=name)
+        resp = {"name": node.partName, "progress": node.progress, "status": node.status}
+        return Response(resp)
 
 class PartsView(APIView):
 
     def put(self, request):
+
         mesh = request.data.get('Mesh')
         progress = request.data.get('Progress')
         Status = request.data.get('Status')
