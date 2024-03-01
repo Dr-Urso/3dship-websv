@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.PartsView.as_view()),
     path('single', views.GetPartPropView.as_view()),
     path('unity', views.UnityView.as_view()),
+    path('bigdata', views.BigDataView.as_view()),
 ]

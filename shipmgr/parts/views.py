@@ -93,3 +93,13 @@ class UnityView(APIView):
         resp = {"Status": 1, "Data": data}
         rresp = {"data":resp}
         return Response(rresp)
+
+class BigDataView(APIView):
+    def get(self, request):
+        count = models.ShipParts.objects.count()
+        countFinished = models.ShipParts.objects.filter(progress=100).count()
+        countGroup = models.PartGroups.objects.count()
+
+
+        res = {"count": count, "countFinished":countFinished, "countGroup":countGroup}
+        return Response(res)
