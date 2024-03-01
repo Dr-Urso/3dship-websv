@@ -14,3 +14,7 @@ class ShipParts(models.Model):
 class PartGroups(models.Model):
     startWith = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
+
+class BuildHistory(models.Model):
+    part = models.ForeignKey(ShipParts, on_delete=models.CASCADE)
+    date = models.DateField(auto_now=True)

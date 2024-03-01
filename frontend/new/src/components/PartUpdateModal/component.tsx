@@ -5,7 +5,7 @@ export default function PartUpdateModal({open, mesh, cancel}) {
   function send(){
     console.log(pgs);
     console.log(sts);
-    fetch("api/parts/",{
+    fetch("/api/parts/",{
       method:"PUT",
       body:JSON.stringify({Mesh:mesh,Progress:pgs,Status:sts}),
       headers:{"X-CSRFToken":document.cookie.split("=")[1], "content-type":"application/json"},
