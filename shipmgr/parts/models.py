@@ -18,3 +18,4 @@ class PartGroups(models.Model):
 class BuildHistory(models.Model):
     part = models.ForeignKey(ShipParts, on_delete=models.CASCADE)
     date = models.DateField(auto_now=True)
+    memo = models.TextField(blank=True, null=True)
