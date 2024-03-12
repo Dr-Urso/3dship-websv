@@ -14,12 +14,14 @@ class workPack(MPTTModel):
 
 
 class Node(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20, null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     days_required = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     workPack = models.ForeignKey('workPack', on_delete=models.PROTECT, null=True)
+
 
 
 class Edge(models.Model):
