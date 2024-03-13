@@ -11,6 +11,7 @@ class workPack(MPTTModel):
     status = models.CharField(max_length=20, null=True, blank=True)
     parent = models.ForeignKey('workPack', on_delete=models.PROTECT, null=True, blank=True, related_name='children')
     parts = models.ManyToManyField(to=ShipParts, blank=True)
+    progress = models.IntegerField(default=0)
 
 
 class Node(models.Model):

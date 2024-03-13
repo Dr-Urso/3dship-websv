@@ -1,7 +1,7 @@
 import MainMenuBar from '@/components/MainMenuBar';
 import { StandardTooltipContent } from '@/pages/workpack/Components/Tooltips';
 import { Edges, Nodes } from '@/pages/workpack/types';
-import { Layout } from 'antd';
+import {Card, Col, Layout, Row} from 'antd';
 import { Gantt, Task } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
 import { useEffect, useState } from 'react';
@@ -37,10 +37,19 @@ export default function Page() {
       name: node.name,
       id: node.id.toString(),
       type: 'task',
-      progress: 0,
+      dependencies: getDependencies(node),
+      progress: node.progress,
     };
   });
-
+  function getDependencies(node: Nodes): string[] {
+    let dep: string[] = [];
+    for (const edge of Edge) {
+      if (edge.target == node.id) {
+        dep.push(edge.source.toString());
+      }
+    }
+    return dep;
+  }
   const nds = Node.map((node) => {
     return {
       label: node.name,
@@ -60,8 +69,13 @@ export default function Page() {
   }
   return (
     <Layout>
-      <MainMenuBar keyy="workpack" />
 
+      <MainMenuBar keyy="workpack" />
+<Row>
+    <Col span={6}>
+        <Card style={{backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)";}}
+    </Col>
+</Row>
       <Gantt
         tasks={tasks}
         locale="zh-CN"

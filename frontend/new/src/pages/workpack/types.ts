@@ -5,6 +5,7 @@ export interface Nodes {
   end_date: string;
   days_required: string;
   description: string;
+  progress: number;
 }
 
 export interface Edges {
