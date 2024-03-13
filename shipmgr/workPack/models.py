@@ -6,12 +6,14 @@ from parts.models import ShipParts
 
 # Create your models here.
 class workPack(MPTTModel):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20, null=True, blank=True)
     memo = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
-    parent = models.ForeignKey('workPack', on_delete=models.PROTECT, null=True, blank=True, related_name='children')
+    parent = models.ForeignKey('workPack', on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
     parts = models.ManyToManyField(to=ShipParts, blank=True)
     progress = models.IntegerField(default=0)
+    days = models.IntegerField(default=0)
 
 
 class Node(models.Model):
@@ -21,10 +23,10 @@ class Node(models.Model):
     end_date = models.DateField(null=True, blank=True)
     days_required = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    workPack = models.ForeignKey('workPack', on_delete=models.PROTECT, null=True)
+    workPack = models.ForeignKey('workPack', on_delete=models.SET_NULL, null=True)
 
 
 
 class Edge(models.Model):
-    source = models.ForeignKey('Node', on_delete=models.PROTECT, null=True, related_name='source')
-    target = models.ForeignKey('Node', on_delete=models.PROTECT, null=True, related_name='target')
+    source = models.ForeignKey('Node', on_delete=models.SET_NULL, null=True, related_name='source')
+    target = models.ForeignKey('Node', on_delete=models.SET_NULL, null=True, related_name='target')

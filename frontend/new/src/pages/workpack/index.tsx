@@ -1,23 +1,44 @@
 import MainMenuBar from '@/components/MainMenuBar';
+import { utils } from '@/pages/bigdata/interfaces';
 import { StandardTooltipContent } from '@/pages/workpack/Components/Tooltips';
 import { Edges, Nodes } from '@/pages/workpack/types';
-import {Card, Col, Layout, Row} from 'antd';
+import { DecompositionTreeGraph } from '@ant-design/charts';
+import {
+  AimOutlined,
+  ApartmentOutlined,
+  AreaChartOutlined,
+  CalendarOutlined,
+} from '@ant-design/icons';
+import { Card, Col, Layout, Row } from 'antd';
 import { Gantt, Task } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
 import { useEffect, useState } from 'react';
-import { GraphCanvas } from 'reagraph';
 import { Header } from './Components/Header';
+import styles from './index.less';
 
 export default function Page() {
   const [Node, setNode] = useState<Nodes[]>([]);
   const [Edge, setEdge] = useState<Edges[]>([]);
+  const [Data, setData] = useState<utils>();
+  const [DecompsData, setDecompsData] = useState();
   const [loading, setLoading] = useState(true);
-  async function fetchNodes(): Promise<{ nodes: Nodes[]; edges: Edges[] }> {
+  async function fetchNodes(): Promise<{
+    nodes: Nodes[];
+    edges: Edges[];
+    data: utils;
+    DecompsData: any;
+  }> {
     const response = await fetch('/api/workpacks/nodes');
+    const response2 = await fetch('/api/parts/bigdata');
+    const response3 = await fetch('/api/workpacks/tree');
     const nds = await response.json();
+    const nds2 = await response2.json();
+    const nds3 = await response3.json();
     return {
       nodes: nds.nodes,
       edges: nds.edges,
+      data: nds2,
+      DecompsData: nds3,
     };
   }
 
@@ -26,6 +47,8 @@ export default function Page() {
       .then((par) => {
         setNode(par.nodes);
         setEdge(par.edges);
+        setData(par.data);
+        setDecompsData(par.DecompsData);
       })
       .then(() => setLoading(false));
   }, []);
@@ -64,35 +87,121 @@ export default function Page() {
       label: edge.source.toString() + '-' + edge.target.toString(),
     };
   });
+  const decompsConfig = {
+    data: DecompsData,
+    markerCfg: (cfg) => {
+      const { children } = cfg;
+      return {
+        show: children?.length,
+      };
+    },
+    behaviors: ['drag-canvas', 'zoom-canvas', 'drag-node'],
+  };
   if (loading) {
     return <div>Loading...</div>;
   }
   return (
-    <Layout>
-
+    <>
       <MainMenuBar keyy="workpack" />
-<Row>
-    <Col span={6}>
-        <Card style={{backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)";}}
-    </Col>
-</Row>
-      <Gantt
-        tasks={tasks}
-        locale="zh-CN"
-        TaskListHeader={Header}
-        TooltipContent={StandardTooltipContent}
-      />
-      <div
-        style={{
-          border: 'solid 1px red',
-          height: 350,
-          width: 350,
-          margin: 15,
-          position: 'relative',
-        }}
-      >
-        <GraphCanvas nodes={nds} edges={egs} />
-      </div>
-    </Layout>
+      <Layout style={{ paddingLeft: '10vw', paddingRight: '10vw' }}>
+        <div className="h-5" />
+        <Row gutter={[16, 16]}>
+          <Col span={6}>
+            <Card
+              style={{
+                backgroundImage:
+                  'linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)',
+              }}
+              className={styles.propcard}
+            >
+              <div className={styles.cardlabel}>
+                <AreaChartOutlined />
+              </div>
+              <div className={styles.cardtitle}>船舶部件完成情况</div>
+              <div className={styles.cardstat}>
+                <div className="text-green-700 inline-block">
+                  {Data?.countFinished}
+                </div>
+                <div
+                  className="text-gray-500 inline-block"
+                  style={{ fontSize: '40px' }}
+                >
+                  {'/' + Data?.count}
+                </div>
+              </div>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card
+              style={{
+                backgroundImage:
+                  'linear-gradient(to top, #4481eb 0%, #04befe 100%)',
+              }}
+              className={styles.propcard}
+            >
+              <div className={styles.cardlabel}>
+                <AimOutlined />
+              </div>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card
+              style={{
+                backgroundImage:
+                  'linear-gradient(to right, #3ab5b0 0%, #3d99be 31%, #56317a 100%)',
+              }}
+              className={styles.propcard}
+            >
+              <div className={styles.cardlabel}>
+                <ApartmentOutlined />
+              </div>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card
+              style={{
+                backgroundImage:
+                  'linear-gradient(to top, #b3ffab 0%, #12fff7 100%)',
+              }}
+              className={styles.propcard}
+            >
+              <div className={styles.cardlabel}>
+                <CalendarOutlined />
+              </div>
+            </Card>
+          </Col>
+        </Row>
+        <div className="h-5" />
+        <Card>
+          <div
+            className="text-center font-bold text-2xl text-gray-500"
+            style={{ top: '-10px', position: 'relative' }}
+          >
+            工程时间图
+          </div>
+          <Gantt
+            tasks={tasks}
+            locale="zh-CN"
+            TaskListHeader={Header}
+            TooltipContent={StandardTooltipContent}
+            listCellWidth={''}
+          />
+        </Card>
+        <div className="h-5" />
+        <Row>
+          <Col span={24}>
+            <Card>
+              <div
+                className="text-center font-bold text-2xl text-gray-500"
+                style={{ top: '-10px', position: 'relative' }}
+              >
+                工作包树形图
+              </div>
+              <DecompositionTreeGraph {...decompsConfig} />
+            </Card>
+          </Col>
+        </Row>
+      </Layout>
+    </>
   );
 }

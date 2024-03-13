@@ -46,3 +46,15 @@ def calculate_dates(start_date):
                 potential_start_date = node_end_date + timedelta(days=1)
                 if not start_dates[target_id] or start_dates[target_id] < potential_start_date:
                     start_dates[target_id] = potential_start_date
+
+
+def build_tree(node):
+    node_data = {
+        'id': str(node.id),  # 假设节点的名称即id
+        'value': {
+            'title': node.name,
+            'items': [],
+        },
+        'children': [build_tree(child) for child in node.get_children()]
+    }
+    return node_data
