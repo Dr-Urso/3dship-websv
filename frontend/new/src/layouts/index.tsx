@@ -1,9 +1,10 @@
-import { Link, Outlet } from 'umi';
-import styles from './index.less';
+import { ProLayout } from '@ant-design/pro-layout';
+import { Outlet } from 'umi';
 
 export default function Layout() {
   return (
-
+    <ProLayout>
       <Outlet />
+    </ProLayout>
   );
 }
