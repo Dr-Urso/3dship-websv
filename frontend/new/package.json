@@ -2,7 +2,7 @@
   "private": true,
   "author": "DrKuma <scy09105@gmail.com>",
   "scripts": {
-    "dev": "umi dev",
+    "dev": "set PORT=8001 && umi dev",
     "build": "umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
