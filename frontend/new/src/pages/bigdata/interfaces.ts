@@ -1,12 +1,14 @@
-export interface utils{
-    count: number;
-    countFinished: number;
-    countGroup: number;
-    multibarData: multiBar[];
+export interface utils {
+  count: number;
+  countFinished: number;
+  countGroup: number;
+  countWorkpack: number;
+  countWorkpackFinished: number;
+  multibarData: multiBar[];
 }
 
-export interface multiBar{
-    Group: string;
-    count: number;
-    type: string;
+export interface multiBar {
+  Group: string;
+  count: number;
+  type: string;
 }

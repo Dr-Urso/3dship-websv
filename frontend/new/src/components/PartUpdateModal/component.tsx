@@ -1,45 +1,50 @@
-import React, {useState} from 'react'
-import {Input, InputNumber, Modal, Space} from "antd";
+import { Input, InputNumber, Modal, Space } from 'antd';
+import { useState } from 'react';
 
-export default function PartUpdateModal({open, mesh, cancel}) {
-  function send(){
+export default function PartUpdateModal({ open, mesh, cancel }) {
+  function send() {
     console.log(pgs);
     console.log(sts);
-    fetch("/api/parts/",{
-      method:"PUT",
-      body:JSON.stringify({Mesh:mesh,Progress:pgs,Status:sts}),
-      headers:{"X-CSRFToken":document.cookie.split("=")[1], "content-type":"application/json"},
+    fetch('/api/parts/', {
+      method: 'PUT',
+      body: JSON.stringify({ Mesh: mesh, Progress: pgs, Status: sts }),
+      headers: {
+        'X-CSRFToken': document.cookie.split('=')[1],
+        'content-type': 'application/json',
+      },
       credentials: 'include',
-    }).then((response)=>{
+    }).then((response) => {
       console.log(response);
     });
+    setSts('');
+    setPgs(0);
     cancel();
   }
-  const [pgs,setPgs] = useState(0);
-  const [sts,setSts] = useState("");
+  const [pgs, setPgs] = useState(0);
+  const [sts, setSts] = useState('');
 
-  return (<Modal
-      open={open}
-      onCancel={cancel}
-      onOk={send}
-  >
-    <Space direction="vertical" style={{ width: '100%' }}>
-      <InputNumber
-          addonBefore={"进度"}
+  return (
+    <Modal open={open} onCancel={cancel} onOk={send}>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <InputNumber
+          addonBefore={'进度'}
           defaultValue={0}
           min={0}
           max={100}
           formatter={(value) => `${value}%`}
           parser={(value) => Number(value!.replace('%', ''))}
           onChange={(e: number) => {
-            setPgs(e)
+            setPgs(e);
           }}
-      />
+        />
 
-      <Input addonBefore={"状态"}  onChange={(e) => {
-        setSts(e.target.value)
-      }}></Input>
-    </Space>
-
-  </Modal>)
+        <Input
+          addonBefore={'状态'}
+          onChange={(e) => {
+            setSts(e.target.value);
+          }}
+        ></Input>
+      </Space>
+    </Modal>
+  );
 }

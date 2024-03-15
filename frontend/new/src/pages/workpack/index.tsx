@@ -1,4 +1,3 @@
-import MainMenuBar from '@/components/MainMenuBar';
 import { utils } from '@/pages/bigdata/interfaces';
 import { StandardTooltipContent } from '@/pages/workpack/Components/Tooltips';
 import { Edges, Nodes } from '@/pages/workpack/types';
@@ -10,7 +9,7 @@ import {
   CalendarOutlined,
 } from '@ant-design/icons';
 import { Card, Col, Layout, Row } from 'antd';
-import { Gantt, Task } from 'gantt-task-react';
+import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
 import { useEffect, useState } from 'react';
 import { Header } from './Components/Header';
@@ -96,14 +95,14 @@ export default function Page() {
       };
     },
     behaviors: ['drag-canvas', 'zoom-canvas', 'drag-node'],
+    layout: { direction: 'TB' },
   };
   if (loading) {
     return <div>Loading...</div>;
   }
   return (
     <>
-      <MainMenuBar keyy="workpack" />
-      <Layout style={{ paddingLeft: '10vw', paddingRight: '10vw' }}>
+      <Layout>
         <div className="h-5" />
         <Row gutter={[16, 16]}>
           <Col span={6}>
@@ -141,6 +140,18 @@ export default function Page() {
             >
               <div className={styles.cardlabel}>
                 <AimOutlined />
+              </div>
+              <div className={styles.cardtitle}>船舶工作包完成情况</div>
+              <div className={styles.cardstat}>
+                <div className="text-green-700 inline-block">
+                  {Data?.countWorkpackFinished}
+                </div>
+                <div
+                  className="text-gray-500 inline-block"
+                  style={{ fontSize: '40px' }}
+                >
+                  {'/' + Data?.countWorkpack}
+                </div>
               </div>
             </Card>
           </Col>
@@ -185,6 +196,7 @@ export default function Page() {
             TaskListHeader={Header}
             TooltipContent={StandardTooltipContent}
             listCellWidth={''}
+            viewMode={ViewMode.Week}
           />
         </Card>
         <div className="h-5" />

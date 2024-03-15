@@ -7,6 +7,7 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from parts.serializers import PartsSerializer, PartsExportSerializer
+from workPack.models import workPack
 from . import models
 
 
@@ -105,6 +106,8 @@ class BigDataView(APIView):
         count = models.ShipParts.objects.count()
         countFinished = models.ShipParts.objects.filter(progress=100).count()
         countGroup = models.PartGroups.objects.count()
+        WorkpackCount = workPack.objects.count()
+        WorkpackCountFinished = workPack.objects.filter(progress=100).count()
 
         groups = models.PartGroups.objects.all()
         multiBarData = []
@@ -134,9 +137,7 @@ class BigDataView(APIView):
             if countt > 5:
                 roseData.append({"type": group.name, "count": countt})
 
-
-
-
-        res = {"count": count, "countFinished": countFinished, "countGroup": countGroup, "multiBarData": multiBarData,
-               "historyLineData": historyLineData, "roseData": roseData}
+        res = {"count": count, "countFinished": countFinished, "countGroup": countGroup, "countWorkpack": WorkpackCount,
+               "countWorkpackFinished": WorkpackCountFinished, "multiBarData": multiBarData,
+               "historyLineData": historyLineData, "roseData": roseData, }
         return Response(res)
